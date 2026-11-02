@@ -1,0 +1,79 @@
+{
+  "annotations": {
+    "changelogDate": "20231210222027"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Datos personales comunes a clientes y empleados",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombres",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "apellidos",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "fechaNacimiento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Persona",
+  "relationships": [
+    {
+      "otherEntityName": "documentoIdentidad",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "documentos",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "medioContacto",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "mediosContacto",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "cliente",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "cliente",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "empleado",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "empleado",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

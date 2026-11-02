@@ -1,0 +1,549 @@
+/*
+ * commerce-app — E-commerce tipo Coolbox (v3)
+ * Modelo de datos completo en JDL para JHipster 9
+ *
+ * ---------------------------------------------------------------------------
+ * ALCANCE DEL SERVICIO
+ * ---------------------------------------------------------------------------
+ * Incluye: clientes, catálogo, carrito, pedidos, envío y comprobantes.
+ * Fuera de alcance (lo atienden otros servicios web):
+ *   - Pagos: el procesamiento lo hace la pasarela / servicio de pagos.
+ *     Este servicio solo registra el resultado (estado, método, transacción).
+ *   - Inventario: Inventario se alimenta vía API del servicio de
+ *     logística y stock. Aquí solo se consulta y se reserva.
+ *   - Postventa: reclamos, quejas, devoluciones parciales.
+ *
+ * ---------------------------------------------------------------------------
+ * CICLO DE VIDA CARRITO -> PEDIDO
+ * ---------------------------------------------------------------------------
+ *   1. El carrito NO separa stock. Muestra siempre el precio vigente.
+ *   2. Checkout: se crea el Pedido en PENDIENTE_PAGO con fechaExpiracion
+ *      (= ahora + 30 min) y se incrementa Inventario.stockReservado.
+ *   3. Pago APROBADO antes de expirar -> PAGADO:
+ *        stock -= cantidad, stockReservado -= cantidad.
+ *   4. Job programado (cada minuto): pedidos PENDIENTE_PAGO con
+ *      fechaExpiracion < ahora -> EXPIRADO y stockReservado -= cantidad.
+ *   5. Límite de pedidos PENDIENTE_PAGO simultáneos por cliente (service)
+ *      para evitar bloqueo de stock por bots.
+ *
+ * Estados de cierre:
+ *   RECHAZADO -> el cliente no acepta lo entregado (producto equivocado)
+ *   ANULADO   -> falla de la tienda (p. ej. última unidad dañada); se reembolsa
+ *   CANCELADO -> falla logística (no llegó) o arrepentimiento según política
+ *   EXPIRADO  -> no se pagó dentro del tiempo
+ *   ENVIADO solo aplica a DELIVERY; LISTO_RECOJO solo a RECOJO_TIENDA.
+ *
+ * ---------------------------------------------------------------------------
+ * ENTIDADES INTERNAS DE JHIPSTER (no se declaran, se referencian con builtInEntity)
+ * ---------------------------------------------------------------------------
+ * User  (tabla jhi_user)
+ *   id, login (UK), password_hash, first_name, last_name, email (UK),
+ *   image_url, activated, lang_key, activation_key, reset_key, reset_date,
+ *   created_by, created_date, last_modified_by, last_modified_date
+ *
+ * Authority  (tabla jhi_authority)           -> roles del sistema
+ *   name (PK): ROLE_ADMIN, ROLE_SUPERVISOR, ROLE_OPERADOR, ROLE_USER
+ *
+ * jhi_user_authority  (user_id, authority_name) -> User N:M Authority
+ *
+ * Reglas:
+ *   - Cliente  -> User con ROLE_USER
+ *   - Empleado -> User con ROLE_ADMIN / ROLE_SUPERVISOR / ROLE_OPERADOR
+ *   - Una misma Persona puede ser Cliente y Empleado (mismo User, varios roles)
+ *
+ * ---------------------------------------------------------------------------
+ * AUDITORÍA: todas las entidades llevan createdBy, createdDate,
+ * lastModifiedBy, lastModifiedDate. Después de generar, hacer que cada
+ * entidad extienda AbstractAuditingEntity para que se llenen solos.
+ * ---------------------------------------------------------------------------
+ */
+
+application {
+  config {
+    baseName commerceApp
+    applicationType monolith
+    packageName pe.commerce.app
+    authenticationType jwt
+    databaseType sql
+    prodDatabaseType postgresql
+    devDatabaseType postgresql
+    buildTool maven
+    clientFramework no
+    skipClient true
+    nativeLanguage es
+    languages [es, en]
+    enableTranslation true
+  }
+  entities *
+}
+
+/* ============================== ENUMS ============================== */
+
+enum TipoDocumento { DNI, CE, PASAPORTE, OTRO }
+enum TipoMedioContacto { CELULAR, FIJO, TELEFONO_TRABAJO, EMAIL, EMAIL_TRABAJO, WHATSAPP }
+enum Cargo { ADMINISTRADOR, SUPERVISOR, OPERADOR, ALMACENERO, VENDEDOR }
+enum Moneda { PEN, USD }
+enum TipoDescuento { PORCENTAJE, MONTO_FIJO }
+enum TipoPrecio { LISTA, OFERTA }
+enum TipoEntrega { DELIVERY, RECOJO_TIENDA }
+enum EstadoItemCarrito { ACTIVO, GUARDADO, CONVERTIDO, ELIMINADO }
+enum EstadoPedido {
+  PENDIENTE_PAGO, PAGADO, EN_PREPARACION, ENVIADO, LISTO_RECOJO, ENTREGADO,
+  RECHAZADO, ANULADO, CANCELADO, EXPIRADO
+}
+enum TipoComprobantePedido { BOLETA, FACTURA }
+enum TipoComprobante { BOLETA, FACTURA, NOTA_CREDITO }
+enum EstadoSunat { PENDIENTE, ACEPTADO, OBSERVADO, RECHAZADO, ANULADO }
+enum MetodoPago { EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, BILLETERA_DIGITAL, TRANSFERENCIA }
+enum EstadoPago { PENDIENTE, APROBADO, RECHAZADO, REEMBOLSADO }
+enum EstadoEnvio { PENDIENTE, EN_RUTA, ENTREGADO, DEVUELTO }
+
+/* ============================ UBICACIÓN ============================ */
+
+/** Catálogo de ubigeo INEI (departamento / provincia / distrito) */
+entity Ubigeo {
+  codigo String required unique minlength(6) maxlength(6)
+  departamento String required maxlength(50)
+  provincia String required maxlength(50)
+  distrito String required maxlength(50)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* ========================= PERSONAS Y USUARIOS ========================= */
+
+/** Datos personales comunes a clientes y empleados */
+entity Persona {
+  nombres String required maxlength(100)
+  apellidos String required maxlength(100)
+  fechaNacimiento LocalDate
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Documentos de identidad de la persona (historial).
+ * Ej.: CE no vigente -> DNI vigente y principal.
+ * Unicidad (tipoDocumento, numero): agregar constraint en Liquibase.
+ */
+entity DocumentoIdentidad {
+  tipoDocumento TipoDocumento required
+  numero String required maxlength(15)
+  fechaVencimiento LocalDate
+  principal Boolean required
+  vigente Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Teléfonos y correos de la persona.
+ * El formato de "valor" se valida en el service según el tipo.
+ * Un principal por tipo (uno para teléfonos, uno para correos).
+ * El email de login está en User; aquí van los de contacto.
+ */
+entity MedioContacto {
+  tipo TipoMedioContacto required
+  valor String required maxlength(100)
+  codigoPais String maxlength(4)
+  anexo String maxlength(6)
+  principal Boolean required
+  verificado Boolean required
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/** Perfil comercial del comprador */
+entity Cliente {
+  codigo String required unique maxlength(20)
+  fechaRegistro Instant required
+  aceptaPublicidad Boolean required
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/** Personal de la empresa (el rol de acceso está en Authority) */
+entity Empleado {
+  codigo String required unique maxlength(20)
+  cargo Cargo required
+  fechaIngreso LocalDate required
+  fechaCese LocalDate
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/** Direcciones de entrega del cliente (Casa, Oficina, etc.) */
+entity Direccion {
+  alias String required maxlength(30)
+  direccion String required maxlength(200)
+  referencia String maxlength(200)
+  nombreContacto String maxlength(100)
+  telefonoContacto String maxlength(15)
+  predeterminada Boolean required
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/** Datos para emitir factura (RUC del cliente o de su empresa) */
+entity DatoFacturacion {
+  ruc String required pattern(/^(10|20)[0-9]{9}$/)
+  razonSocial String required maxlength(200)
+  direccionFiscal String required maxlength(250)
+  predeterminado Boolean required
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* ============================= CATÁLOGO ============================= */
+
+/** Categoría jerárquica (padre opcional) */
+entity Categoria {
+  nombre String required maxlength(80)
+  slug String required unique maxlength(100)
+  orden Integer
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+entity Marca {
+  nombre String required unique maxlength(80)
+  logoUrl String maxlength(500)
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * slug: identificador legible para la URL del producto
+ *       (ej. /producto/audifonos-sony-wh1000xm5).
+ * Precio aplicable: si precioOferta no es nulo manda la oferta,
+ * si no, precioLista.
+ */
+entity Producto {
+  sku String required unique maxlength(30)
+  nombre String required maxlength(200)
+  slug String required unique maxlength(220)
+  modelo String maxlength(80)
+  descripcion String maxlength(4000)
+  especificaciones String maxlength(4000)
+  precioLista BigDecimal required min(0)
+  precioOferta BigDecimal min(0)
+  pesoKg BigDecimal min(0)
+  garantiaMeses Integer min(0)
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+entity ProductoImagen {
+  url String required maxlength(500)
+  orden Integer required min(1)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* ============================ INVENTARIO ============================ */
+
+entity Tienda {
+  nombre String required maxlength(100)
+  direccion String required maxlength(200)
+  telefono String maxlength(15)
+  permiteRecojo Boolean required
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Stock por producto y tienda. stock y stockMinimo los alimenta el
+ * servicio de logística y stock vía API. Este servicio solo maneja
+ * stockReservado (pedidos PENDIENTE_PAGO).
+ */
+entity Inventario {
+  stock Integer required min(0)
+  stockReservado Integer required min(0)
+  stockMinimo Integer min(0)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* ============================== CARRITO ============================== */
+
+/** Carrito persistente del cliente (uno por cliente). No reserva stock. */
+entity Carrito {
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Ítem del carrito. El precio se lee siempre del Producto (vigente).
+ * seleccionado = entra al checkout; los no seleccionados quedan ACTIVO.
+ * Al confirmar el pedido, los ítems copiados pasan a CONVERTIDO.
+ */
+entity CarritoItem {
+  cantidad Integer required min(1)
+  seleccionado Boolean required
+  estado EstadoItemCarrito required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* =============================== VENTAS =============================== */
+
+/** Descuento adicional sobre el total del pedido (se suma a la oferta del producto) */
+entity Cupon {
+  codigo String required unique maxlength(30)
+  descripcion String maxlength(200)
+  tipoDescuento TipoDescuento required
+  valor BigDecimal required min(0)
+  montoMinimo BigDecimal min(0)
+  fechaInicio LocalDate required
+  fechaFin LocalDate required
+  usosMaximos Integer min(1)
+  usosPorCliente Integer min(1)
+  activo Boolean required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * descuento = descuento del cupón (nivel pedido).
+ * fechaExpiracion = fechaPedido + 30 min; pasado ese tiempo sin pago
+ * el job lo pasa a EXPIRADO y libera stockReservado.
+ */
+entity Pedido {
+  nroPedido String required unique maxlength(20)
+  tipoEntrega TipoEntrega required
+  tipoComprobante TipoComprobantePedido required
+  estado EstadoPedido required
+  moneda Moneda required
+  subtotal BigDecimal required min(0)
+  descuento BigDecimal required min(0)
+  costoEnvio BigDecimal required min(0)
+  igv BigDecimal required min(0)
+  total BigDecimal required min(0)
+  fechaPedido Instant required
+  fechaExpiracion Instant required
+  observaciones String maxlength(500)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Línea del pedido: copia inmutable con precio congelado.
+ * precioUnitario = precioLista del producto al momento de la compra.
+ * descuento      = precioLista - precioOferta (0 si tipoPrecio = LISTA).
+ * subtotal       = (precioUnitario - descuento) * cantidad.
+ * El cupón NO se prorratea aquí; va en Pedido.descuento.
+ */
+entity PedidoDetalle {
+  skuProducto String required maxlength(30)
+  nombreProducto String required maxlength(200)
+  cantidad Integer required min(1)
+  tipoPrecio TipoPrecio required
+  precioUnitario BigDecimal required min(0)
+  descuento BigDecimal required min(0)
+  subtotal BigDecimal required min(0)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Trazabilidad de estados del pedido.
+ * Un registro por cambio; la cronología sale de ordenar por createdDate.
+ */
+entity PedidoEstadoHistorial {
+  estado EstadoPedido required
+  comentario String maxlength(500)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Resultado de un intento de pago (puede haber varios por pedido).
+ * subMetodo: YAPE, PLIN (billetera) / VISA, MASTERCARD (tarjeta).
+ * pasarela: código/nombre que devuelve la pasarela (Niubiz, Izipay, Mercado Pago...).
+ */
+entity Pago {
+  metodo MetodoPago required
+  subMetodo String maxlength(30)
+  pasarela String maxlength(50)
+  nroTransaccion String maxlength(100)
+  moneda Moneda required
+  monto BigDecimal required min(0)
+  estado EstadoPago required
+  fechaPago Instant required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/** Entrega por delivery; guarda copia de la dirección usada */
+entity Envio {
+  courier String maxlength(80)
+  tracking String maxlength(100)
+  estado EstadoEnvio required
+  direccionEntrega String required maxlength(200)
+  ubigeoEntrega String required maxlength(6)
+  referenciaEntrega String maxlength(200)
+  nombreReceptor String required maxlength(100)
+  telefonoReceptor String required maxlength(15)
+  fechaEstimada LocalDate
+  fechaEntrega Instant
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/**
+ * Comprobante electrónico SUNAT.
+ * Los datos del receptor se copian al emitir (no cambian si luego
+ * el cliente actualiza su documento o su RUC), por eso no hay FK
+ * a DocumentoIdentidad ni a DatoFacturacion.
+ * comprobanteReferencia: solo para NOTA_CREDITO (boleta/factura que modifica).
+ */
+entity Comprobante {
+  tipo TipoComprobante required
+  serie String required minlength(4) maxlength(4)
+  numero Integer required min(1)
+  fechaEmision Instant required
+  receptorTipoDocumento String required maxlength(10)
+  receptorNroDocumento String required maxlength(15)
+  receptorNombre String required maxlength(200)
+  receptorDireccion String maxlength(250)
+  moneda Moneda required
+  opGravada BigDecimal required min(0)
+  igv BigDecimal required min(0)
+  total BigDecimal required min(0)
+  estadoSunat EstadoSunat required
+  xmlUrl String maxlength(500)
+  pdfUrl String maxlength(500)
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+entity Resena {
+  calificacion Integer required min(1) max(5)
+  comentario String maxlength(1000)
+  compraVerificada Boolean required
+  aprobada Boolean required
+  fecha Instant required
+  createdBy String maxlength(50)
+  createdDate Instant
+  lastModifiedBy String maxlength(50)
+  lastModifiedDate Instant
+}
+
+/* ============================= RELACIONES ============================= */
+
+relationship OneToOne {
+  Cliente{user(login) required} to User with builtInEntity
+  Empleado{user(login) required} to User with builtInEntity
+  Cliente{persona(nombres) required} to Persona{cliente}
+  Empleado{persona(nombres) required} to Persona{empleado}
+  Carrito{cliente(codigo) required} to Cliente{carrito}
+  Envio{pedido(nroPedido) required} to Pedido{envio}
+  PedidoDetalle{carritoItem} to CarritoItem
+}
+
+relationship OneToMany {
+  Persona{documentos} to DocumentoIdentidad{persona(nombres) required}
+  Persona{mediosContacto} to MedioContacto{persona(nombres) required}
+
+  Cliente{direcciones} to Direccion{cliente(codigo) required}
+  Cliente{datosFacturacion} to DatoFacturacion{cliente(codigo) required}
+  Cliente{pedidos} to Pedido{cliente(codigo) required}
+  Cliente{resenas} to Resena{cliente(codigo) required}
+
+  Categoria{subcategorias} to Categoria{padre(nombre)}
+  Categoria{productos} to Producto{categoria(nombre) required}
+  Marca{productos} to Producto{marca(nombre) required}
+
+  Producto{imagenes} to ProductoImagen{producto(sku) required}
+  Producto{inventarios} to Inventario{producto(sku) required}
+  Producto{resenas} to Resena{producto(sku) required}
+
+  Tienda{inventarios} to Inventario{tienda(nombre) required}
+  Tienda{empleados} to Empleado{tienda(nombre)}
+
+  Carrito{items} to CarritoItem{carrito required}
+
+  Pedido{detalles} to PedidoDetalle{pedido(nroPedido) required}
+  Pedido{historialEstados} to PedidoEstadoHistorial{pedido(nroPedido) required}
+  Pedido{pagos} to Pago{pedido(nroPedido) required}
+  Pedido{comprobantes} to Comprobante{pedido(nroPedido) required}
+}
+
+relationship ManyToOne {
+  Direccion{ubigeo(codigo) required} to Ubigeo
+  Tienda{ubigeo(codigo) required} to Ubigeo
+
+  CarritoItem{producto(sku) required} to Producto
+  PedidoDetalle{producto(sku) required} to Producto
+
+  Pedido{cupon(codigo)} to Cupon
+  Pedido{tiendaRecojo(nombre)} to Tienda
+  Pedido{atendidoPor(codigo)} to Empleado
+
+  Envio{direccion(alias)} to Direccion
+
+  Comprobante{comprobanteReferencia(numero)} to Comprobante
+}
+
+/* ============================== OPCIONES ============================== */
+
+dto * with mapstruct
+service * with serviceImpl
+paginate Producto, Pedido, Cliente, Empleado, Comprobante with pagination
+paginate Resena with infinite-scroll
+filter Producto, Pedido, Cliente, Comprobante

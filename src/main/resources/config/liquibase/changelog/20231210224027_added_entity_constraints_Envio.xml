@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Envio.
+    -->
+    <changeSet id="20231210224027-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="pedido_id"
+                                 baseTableName="envio"
+                                 constraintName="fk_envio__pedido_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="pedido"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="direccion_id"
+                                 baseTableName="envio"
+                                 constraintName="fk_envio__direccion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="direccion"
+                                 />
+    </changeSet>
+</databaseChangeLog>

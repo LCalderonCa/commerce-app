@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Comprobante.
+    -->
+    <changeSet id="20231210224127-1" author="jhipster">
+        <createTable tableName="comprobante" remarks="Comprobante electrónico SUNAT.\nLos datos del receptor se copian al emitir (no cambian si luego\nel cliente actualiza su documento o su RUC), por eso no hay FK\na DocumentoIdentidad ni a DatoFacturacion.\ncomprobanteReferencia: solo para NOTA_CREDITO (boleta/factura que modifica).">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tipo" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="serie" type="varchar(4)">
+                <constraints nullable="false" />
+            </column>
+            <column name="numero" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="fecha_emision" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="receptor_tipo_documento" type="varchar(10)">
+                <constraints nullable="false" />
+            </column>
+            <column name="receptor_nro_documento" type="varchar(15)">
+                <constraints nullable="false" />
+            </column>
+            <column name="receptor_nombre" type="varchar(200)">
+                <constraints nullable="false" />
+            </column>
+            <column name="receptor_direccion" type="varchar(250)">
+                <constraints nullable="true" />
+            </column>
+            <column name="moneda" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="op_gravada" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="igv" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="total" type="decimal(21,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="estado_sunat" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="xml_url" type="varchar(500)">
+                <constraints nullable="true" />
+            </column>
+            <column name="pdf_url" type="varchar(500)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_date" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_modified_date" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="comprobante_referencia_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="pedido_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="comprobante" columnName="fecha_emision" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="comprobante" columnName="created_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="comprobante" columnName="last_modified_date" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20231210224127-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="../fake-data/comprobante.csv"
+                  relativeToChangelogFile="true"
+                  separator=";"
+                  tableName="comprobante"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="tipo" type="string"/>
+            <column name="serie" type="string"/>
+            <column name="numero" type="numeric"/>
+            <column name="fecha_emision" type="date"/>
+            <column name="receptor_tipo_documento" type="string"/>
+            <column name="receptor_nro_documento" type="string"/>
+            <column name="receptor_nombre" type="string"/>
+            <column name="receptor_direccion" type="string"/>
+            <column name="moneda" type="string"/>
+            <column name="op_gravada" type="numeric"/>
+            <column name="igv" type="numeric"/>
+            <column name="total" type="numeric"/>
+            <column name="estado_sunat" type="string"/>
+            <column name="xml_url" type="string"/>
+            <column name="pdf_url" type="string"/>
+            <column name="created_by" type="string"/>
+            <column name="created_date" type="date"/>
+            <column name="last_modified_by" type="string"/>
+            <column name="last_modified_date" type="date"/>
+            <column name="pedido_id" type="numeric"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

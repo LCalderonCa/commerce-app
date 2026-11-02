@@ -1,0 +1,91 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223927"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Resultado de un intento de pago (puede haber varios por pedido).\\nsubMetodo: YAPE, PLIN (billetera) / VISA, MASTERCARD (tarjeta).\\npasarela: código/nombre que devuelve la pasarela (Niubiz, Izipay, Mercado Pago...).",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "metodo",
+      "fieldType": "MetodoPago",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "EFECTIVO,TARJETA_CREDITO,TARJETA_DEBITO,BILLETERA_DIGITAL,TRANSFERENCIA"
+    },
+    {
+      "fieldName": "subMetodo",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "pasarela",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "nroTransaccion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "moneda",
+      "fieldType": "Moneda",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PEN,USD"
+    },
+    {
+      "fieldName": "monto",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPago",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDIENTE,APROBADO,RECHAZADO,REEMBOLSADO"
+    },
+    {
+      "fieldName": "fechaPago",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Pago",
+  "relationships": [
+    {
+      "otherEntityField": "nroPedido",
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "pagos",
+      "relationshipName": "pedido",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

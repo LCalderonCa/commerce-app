@@ -1,0 +1,68 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223427"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Ítem del carrito. El precio se lee siempre del Producto (vigente).\\nseleccionado = entra al checkout; los no seleccionados quedan ACTIVO.\\nAl confirmar el pedido, los ítems copiados pasan a CONVERTIDO.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "seleccionado",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoItemCarrito",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ACTIVO,GUARDADO,CONVERTIDO,ELIMINADO"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "CarritoItem",
+  "relationships": [
+    {
+      "otherEntityField": "sku",
+      "otherEntityName": "producto",
+      "relationshipName": "producto",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "carrito",
+      "otherEntityRelationshipName": "items",
+      "relationshipName": "carrito",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,51 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223327"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Carrito persistente del cliente (uno por cliente). No reserva stock.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Carrito",
+  "relationships": [
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "cliente",
+      "otherEntityRelationshipName": "carrito",
+      "relationshipName": "cliente",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "carritoItem",
+      "otherEntityRelationshipName": "carrito",
+      "relationshipName": "items",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

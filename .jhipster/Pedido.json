@@ -1,0 +1,178 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223627"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "descuento = descuento del cupón (nivel pedido).\\nfechaExpiracion = fechaPedido + 30 min; pasado ese tiempo sin pago\\nel job lo pasa a EXPIRADO y libera stockReservado.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nroPedido",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "tipoEntrega",
+      "fieldType": "TipoEntrega",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "DELIVERY,RECOJO_TIENDA"
+    },
+    {
+      "fieldName": "tipoComprobante",
+      "fieldType": "TipoComprobantePedido",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BOLETA,FACTURA"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPedido",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDIENTE_PAGO,PAGADO,EN_PREPARACION,ENVIADO,LISTO_RECOJO,ENTREGADO,RECHAZADO,ANULADO,CANCELADO,EXPIRADO"
+    },
+    {
+      "fieldName": "moneda",
+      "fieldType": "Moneda",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PEN,USD"
+    },
+    {
+      "fieldName": "subtotal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "costoEnvio",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "igv",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "fechaPedido",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaExpiracion",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Pedido",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "pedidoDetalle",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "detalles",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "pedidoEstadoHistorial",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "historialEstados",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "pago",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "pagos",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "comprobante",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "comprobantes",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "cupon",
+      "relationshipName": "cupon",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "tienda",
+      "relationshipName": "tiendaRecojo",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "empleado",
+      "relationshipName": "atendidoPor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "envio",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "envio",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "cliente",
+      "otherEntityRelationshipName": "pedidos",
+      "relationshipName": "cliente",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

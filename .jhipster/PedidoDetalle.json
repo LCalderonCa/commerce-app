@@ -1,0 +1,100 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223727"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Línea del pedido: copia inmutable con precio congelado.\\nprecioUnitario = precioLista del producto al momento de la compra.\\ndescuento      = precioLista - precioOferta (0 si tipoPrecio = LISTA).\\nsubtotal       = (precioUnitario - descuento) * cantidad.\\nEl cupón NO se prorratea aquí; va en Pedido.descuento.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "skuProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "nombreProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "tipoPrecio",
+      "fieldType": "TipoPrecio",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LISTA,OFERTA"
+    },
+    {
+      "fieldName": "precioUnitario",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "subtotal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "PedidoDetalle",
+  "relationships": [
+    {
+      "otherEntityName": "carritoItem",
+      "relationshipName": "carritoItem",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityField": "sku",
+      "otherEntityName": "producto",
+      "relationshipName": "producto",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nroPedido",
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "detalles",
+      "relationshipName": "pedido",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

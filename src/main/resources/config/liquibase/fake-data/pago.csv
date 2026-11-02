@@ -1,0 +1,31 @@
+id;metodo;sub_metodo;pasarela;nro_transaccion;moneda;monto;estado;fecha_pago;created_by;created_date;last_modified_by;last_modified_date;pedido_id
+1;TRANSFERENCIA;recklessly patiently;dimly;brochure jazz;USD;4537.58;REEMBOLSADO;2023-12-10T05:21:38;proceed aside;2023-12-10T22:24:29;zen though since;2023-12-10T09:55:40;1
+2;EFECTIVO;aboard buzzing whose;evince arraign;elevation hence cripple;PEN;10512.36;RECHAZADO;2023-12-10T17:07:03;silt intensely;2023-12-09T23:36:34;sidetrack;2023-12-10T07:16:32;2
+3;TARJETA_DEBITO;for;of;energetically whether;PEN;588.8;PENDIENTE;2023-12-10T03:22:02;nor reproach;2023-12-10T15:45:43;provided resort pfft;2023-12-10T05:33:56;3
+4;TARJETA_DEBITO;ugh;hateful;sun iridescence;USD;7373.73;PENDIENTE;2023-12-10T20:30:35;interestingly furthermore;2023-12-10T12:35:49;between instantly;2023-12-10T21:24:44;4
+5;TRANSFERENCIA;caring;ack tapioca;yowza muddy;PEN;4233.68;REEMBOLSADO;2023-12-09T23:16:43;fax sternly spotless;2023-12-10T17:09:48;courageously;2023-12-10T15:51:11;5
+6;TARJETA_CREDITO;tousle;cricket;majestically furthermore whoa;PEN;29575.19;APROBADO;2023-12-10T05:46:43;curl because whoa;2023-12-10T19:35:10;yet;2023-12-10T14:30:50;6
+7;BILLETERA_DIGITAL;overproduce howl;righteously beside for;pinstripe perfumed loaf;USD;8894.43;REEMBOLSADO;2023-12-09T23:45:54;times;2023-12-10T08:20:27;phooey confiscate;2023-12-10T19:51:14;7
+8;EFECTIVO;openly;supposing qua splendid;golden mockingly;USD;14578.65;RECHAZADO;2023-12-10T13:24:57;perky beneath;2023-12-10T00:13:26;inside;2023-12-10T22:09:16;8
+9;TRANSFERENCIA;up;blah while ack;unnecessarily pish;USD;23410.32;APROBADO;2023-12-10T03:43:24;firsthand where;2023-12-10T22:17:26;private stir-fry;2023-12-10T13:11:34;9
+10;BILLETERA_DIGITAL;since;yearningly;successfully demobilise dwell;USD;2014.17;PENDIENTE;2023-12-10T14:16:49;gnaw huzzah duster;2023-12-10T08:42:36;ravel ravage untidy;2023-12-10T19:54:51;10
+11;BILLETERA_DIGITAL;tromp;per phew;unto eek;USD;5744.85;RECHAZADO;2023-12-10T12:20:03;empty;2023-12-10T08:53:10;boo duh glum;2023-12-10T10:17:55;11
+12;TRANSFERENCIA;carefully unsightly;politely while;celebrate;PEN;1750.67;REEMBOLSADO;2023-12-10T10:09:03;youthfully;2023-12-10T11:36:51;instance;2023-12-10T09:25:41;12
+13;EFECTIVO;ah;because that plus;meh;PEN;15471.23;REEMBOLSADO;2023-12-10T22:21:16;upbeat indelible or;2023-12-10T19:58:07;meh difficult;2023-12-10T11:21:58;13
+14;TARJETA_CREDITO;well-documented provided;revoke mesh;hateful woot watery;USD;19583.22;PENDIENTE;2023-12-10T20:01:34;scrutinise;2023-12-10T09:44:42;darling plus;2023-12-10T10:39:32;14
+15;TARJETA_CREDITO;unless;why because;obedience wonderfully oof;USD;25795.93;PENDIENTE;2023-12-10T19:38:05;apropos deliberately so;2023-12-10T01:39:57;waltz coliseum;2023-12-10T01:04:28;15
+16;TARJETA_DEBITO;entomb;adaptation or freely;gosh even;USD;27012.4;APROBADO;2023-12-10T17:46:51;fit lively;2023-12-10T13:27:36;afraid bend;2023-12-10T02:40:19;16
+17;TRANSFERENCIA;atop during gah;ignorant fisherman;quarrelsomely afore best;PEN;26625.28;REEMBOLSADO;2023-12-10T08:47:14;so;2023-12-10T00:22:21;revoke intervention;2023-12-10T17:36:45;17
+18;BILLETERA_DIGITAL;duh insidious;about yet;raw;PEN;9214.15;RECHAZADO;2023-12-10T18:54:28;stealthily;2023-12-10T15:22:46;pace below equate;2023-12-10T20:56:49;18
+19;TRANSFERENCIA;hubris upward drat;curiously cheetah;advancement thin fuzzy;USD;30208.25;PENDIENTE;2023-12-10T01:06:50;blank log;2023-12-10T09:50:06;famously;2023-12-10T20:27:51;19
+20;TRANSFERENCIA;dividend;skeleton draft;stall ample intently;USD;22498.58;RECHAZADO;2023-12-10T06:40:49;which;2023-12-10T09:36:58;among round derby;2023-12-10T00:48:40;20
+21;TRANSFERENCIA;whoa even ah;once completion;object;PEN;2392.13;RECHAZADO;2023-12-10T15:11:19;order lifestyle;2023-12-10T09:30:57;oof yahoo fashion;2023-12-10T10:28:24;21
+22;EFECTIVO;easily sense;whoever guide flight;graceful negative swine;PEN;5128.84;RECHAZADO;2023-12-10T19:22:46;which;2023-12-10T22:05:55;yippee;2023-12-10T01:07:47;22
+23;TARJETA_CREDITO;until;robust;artistic event;USD;7411.06;APROBADO;2023-12-10T08:10:37;singe overcooked graffiti;2023-12-10T11:36:19;ostrich;2023-12-10T16:38:55;23
+24;EFECTIVO;times release;loudly after where;boo fake;PEN;3268.68;PENDIENTE;2023-12-10T13:51:04;towards er huzzah;2023-12-10T04:59:07;equally gee besides;2023-12-10T07:55:43;24
+25;TRANSFERENCIA;pop embossing;but wearily;reassuringly insidious;PEN;20610.37;REEMBOLSADO;2023-12-10T13:32:13;settle angle;2023-12-09T23:41:20;absent;2023-12-10T22:07:33;25
+26;TARJETA_DEBITO;staid;space;scratch what;USD;16715.58;RECHAZADO;2023-12-10T06:52:10;woot ick;2023-12-10T16:12:02;about sheepishly beyond;2023-12-10T13:46:44;26
+27;TARJETA_CREDITO;lifestyle;for;till;PEN;23495.33;PENDIENTE;2023-12-10T22:31:54;yuck pro;2023-12-10T05:55:35;cone following;2023-12-10T11:55:21;27
+28;TARJETA_DEBITO;overburden once;railway aha;insert faithfully smuggle;PEN;30675.63;APROBADO;2023-12-10T20:44:52;among;2023-12-10T00:00:12;fleck;2023-12-10T22:36:03;28
+29;TARJETA_CREDITO;sticky;digital alongside;unto;USD;2816.84;PENDIENTE;2023-12-10T14:11:54;lay aware;2023-12-10T14:50:25;now before;2023-12-10T15:20:47;29
+30;TARJETA_DEBITO;sprinkles;unusual splash source;versus;PEN;11756.16;APROBADO;2023-12-10T16:47:30;motionless beloved abaft;2023-12-10T09:53:57;wildly;2023-12-10T16:12:21;30

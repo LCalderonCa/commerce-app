@@ -1,0 +1,143 @@
+{
+  "annotations": {
+    "changelogDate": "20231210224127"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Comprobante electrónico SUNAT.\\nLos datos del receptor se copian al emitir (no cambian si luego\\nel cliente actualiza su documento o su RUC), por eso no hay FK\\na DocumentoIdentidad ni a DatoFacturacion.\\ncomprobanteReferencia: solo para NOTA_CREDITO (boleta/factura que modifica).",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "tipo",
+      "fieldType": "TipoComprobante",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BOLETA,FACTURA,NOTA_CREDITO"
+    },
+    {
+      "fieldName": "serie",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "4",
+      "fieldValidateRulesMinlength": "4"
+    },
+    {
+      "fieldName": "numero",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "fechaEmision",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "receptorTipoDocumento",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "10"
+    },
+    {
+      "fieldName": "receptorNroDocumento",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "15"
+    },
+    {
+      "fieldName": "receptorNombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "receptorDireccion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "250"
+    },
+    {
+      "fieldName": "moneda",
+      "fieldType": "Moneda",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PEN,USD"
+    },
+    {
+      "fieldName": "opGravada",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "igv",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "estadoSunat",
+      "fieldType": "EstadoSunat",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDIENTE,ACEPTADO,OBSERVADO,RECHAZADO,ANULADO"
+    },
+    {
+      "fieldName": "xmlUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "pdfUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Comprobante",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "numero",
+      "otherEntityName": "comprobante",
+      "relationshipName": "comprobanteReferencia",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "nroPedido",
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "comprobantes",
+      "relationshipName": "pedido",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

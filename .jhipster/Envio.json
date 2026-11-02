@@ -1,0 +1,107 @@
+{
+  "annotations": {
+    "changelogDate": "20231210224027"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Entrega por delivery; guarda copia de la dirección usada",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "courier",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    },
+    {
+      "fieldName": "tracking",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoEnvio",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDIENTE,EN_RUTA,ENTREGADO,DEVUELTO"
+    },
+    {
+      "fieldName": "direccionEntrega",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "ubigeoEntrega",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "6"
+    },
+    {
+      "fieldName": "referenciaEntrega",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "nombreReceptor",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "telefonoReceptor",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "15"
+    },
+    {
+      "fieldName": "fechaEstimada",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaEntrega",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Envio",
+  "relationships": [
+    {
+      "otherEntityField": "nroPedido",
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "envio",
+      "relationshipName": "pedido",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "alias",
+      "otherEntityName": "direccion",
+      "relationshipName": "direccion",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,31 @@
+id;codigo;descripcion;tipo_descuento;valor;monto_minimo;fecha_inicio;fecha_fin;usos_maximos;usos_por_cliente;activo;created_by;created_date;last_modified_by;last_modified_date
+1;cheese scratch;where joshingly;MONTO_FIJO;28633.52;22726.21;2023-12-10;2023-12-10;15175;29182;true;excluding petty;2023-12-10T19:28:35;clearly;2023-12-10T14:49:31
+2;intermarry;minister uh-huh strident;PORCENTAJE;28390.44;17873.42;2023-12-10;2023-12-10;4698;1766;true;meh second;2023-12-10T18:30:03;amid;2023-12-10T00:50:08
+3;mealy;blah;MONTO_FIJO;32054.06;3197.23;2023-12-10;2023-12-10;28792;27940;false;regularly whoa proud;2023-12-10T02:58:50;weakly the;2023-12-10T10:26:02
+4;and absent synthesise;lovingly;PORCENTAJE;26340.68;19247.67;2023-12-10;2023-12-10;20300;31806;true;mutate like;2023-12-10T20:59:52;before;2023-12-10T22:03:57
+5;gah lest;phooey physically slake;MONTO_FIJO;30349.05;21624.47;2023-12-10;2023-12-10;6279;32557;true;sorrowful;2023-12-10T08:34:44;cornet mortally;2023-12-10T00:29:01
+6;cleave in to;besides cosset quip;MONTO_FIJO;8000.84;23950.55;2023-12-10;2023-12-10;7786;32245;true;ew apparatus;2023-12-10T00:40:26;secrecy newsstand gosh;2023-12-10T19:12:29
+7;incidentally;unethically yippee accelerator;PORCENTAJE;21615.37;21720.56;2023-12-10;2023-12-10;15610;10849;false;eek;2023-12-10T08:01:16;puny;2023-12-10T18:34:20
+8;if colorfully speedily;dislocate boo;MONTO_FIJO;12156.06;27470.45;2023-12-10;2023-12-10;1361;17100;true;qualified ah;2023-12-10T12:42:15;but;2023-12-10T17:41:03
+9;ouch that jaggedly;or plan;PORCENTAJE;30140.81;29353.74;2023-12-10;2023-12-10;10243;4059;false;courageous times ugh;2023-12-10T00:42:33;poppy an jaggedly;2023-12-10T02:41:54
+10;how pfft concerning;victorious why since;MONTO_FIJO;14787.63;22678.97;2023-12-10;2023-12-10;7899;21427;true;necessary;2023-12-10T00:53:06;video gee;2023-12-10T19:56:22
+11;eventually seldom;blah humor scram;PORCENTAJE;5038.99;507.99;2023-12-10;2023-12-10;15786;23288;false;carp minus braid;2023-12-10T01:24:07;voluntarily bobble owlishly;2023-12-10T21:34:14
+12;well-off;scornful wildly;MONTO_FIJO;1109.87;27218.56;2023-12-10;2023-12-10;25747;30441;false;after;2023-12-10T20:46:18;granny;2023-12-10T21:01:41
+13;boo as where;since rubbery;PORCENTAJE;4915.03;25914.72;2023-12-10;2023-12-10;17903;4511;false;who;2023-12-10T06:47:11;colossal;2023-12-10T15:08:46
+14;supposing;celebrated er;PORCENTAJE;3211.45;2457.19;2023-12-10;2023-12-10;24614;5296;false;anti;2023-12-10T20:21:35;afraid fake motionless;2023-12-10T08:48:28
+15;whoa;negotiation;MONTO_FIJO;32228.67;22365.48;2023-12-10;2023-12-10;7787;7289;false;tedious so;2023-12-10T05:52:25;unaccountably aware aboard;2023-12-10T02:17:16
+16;whoa whose boohoo;oh;MONTO_FIJO;30609.65;25973.6;2023-12-10;2023-12-10;17885;31985;false;digitize even deflate;2023-12-10T10:42:25;now failing whoa;2023-12-10T13:31:51
+17;versus geez;save evenly proofread;MONTO_FIJO;20622.12;29994.32;2023-12-10;2023-12-10;18454;19055;true;um;2023-12-10T02:32:21;blushing unfortunately;2023-12-10T10:54:00
+18;perspire evenly blight;etch over;MONTO_FIJO;8680.08;30091.35;2023-12-10;2023-12-10;9275;18077;false;blah;2023-12-10T08:10:05;though;2023-12-10T14:10:09
+19;consequently;beneath though scorpion;MONTO_FIJO;32455.13;26563.3;2023-12-10;2023-12-10;673;24593;true;loosely emulsify neck;2023-12-10T02:44:54;congregate;2023-12-10T01:57:40
+20;hairy notwithstanding amidst;among seriously;MONTO_FIJO;23799.82;5581.34;2023-12-10;2023-12-10;23506;17339;false;hm;2023-12-09T23:12:42;alligator;2023-12-10T08:21:42
+21;perspire;pillbox jealously;MONTO_FIJO;19782.69;29426.79;2023-12-10;2023-12-10;20725;14074;true;so;2023-12-10T21:00:29;forenenst shoot;2023-12-10T19:08:07
+22;fatally basic;appreciate utterly government;MONTO_FIJO;30439.66;11726.26;2023-12-10;2023-12-10;22282;11161;false;geez ridge tomorrow;2023-12-10T07:44:39;woot;2023-12-10T05:36:48
+23;courageously lest;failing even monthly;PORCENTAJE;20957.24;19982.91;2023-12-10;2023-12-10;23894;7674;true;lazy midst joyously;2023-12-10T20:33:57;transplant;2023-12-10T19:35:42
+24;not;old-fashioned ouch oof;MONTO_FIJO;20388.49;2755.38;2023-12-10;2023-12-10;25918;30364;false;than;2023-12-10T01:45:48;fax how;2023-12-10T05:13:15
+25;along;expansion uh-huh;PORCENTAJE;28576.7;19420.69;2023-12-10;2023-12-10;19873;30592;true;oof terribly;2023-12-10T04:09:29;grass bowler where;2023-12-10T10:50:09
+26;certify;bustling unless until;MONTO_FIJO;28524.44;21519.13;2023-12-10;2023-12-10;10526;12947;true;manner qua;2023-12-10T14:26:50;onto ha;2023-12-10T19:48:27
+27;upon unlike excluding;inasmuch;MONTO_FIJO;32619.98;24220.87;2023-12-10;2023-12-10;12649;21492;true;notwithstanding smoggy;2023-12-10T06:58:56;tuba;2023-12-10T00:32:18
+28;uh-huh wisely loftily;versus unbearably punctually;MONTO_FIJO;32034.55;3944.23;2023-12-10;2023-12-10;23470;20591;false;vastly notwithstanding proselytise;2023-12-10T19:27:23;defiantly schedule;2023-12-10T19:58:21
+29;specific even marten;grass;PORCENTAJE;557.93;20504.41;2023-12-10;2023-12-10;13863;14498;true;hepatitis;2023-12-10T10:04:11;slowly parsnip unfortunately;2023-12-09T23:45:36
+30;down thoughtfully;inasmuch until;MONTO_FIJO;9963.72;17514.81;2023-12-10;2023-12-10;18393;18539;false;longingly;2023-12-10T02:29:01;yum cautiously;2023-12-10T07:21:15

@@ -1,0 +1,70 @@
+{
+  "annotations": {
+    "changelogDate": "20231210222127"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Documentos de identidad de la persona (historial).\\nEj.: CE no vigente -> DNI vigente y principal.\\nUnicidad (tipoDocumento, numero): agregar constraint en Liquibase.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "tipoDocumento",
+      "fieldType": "TipoDocumento",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "DNI,CE,PASAPORTE,OTRO"
+    },
+    {
+      "fieldName": "numero",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "15"
+    },
+    {
+      "fieldName": "fechaVencimiento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "principal",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "vigente",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "DocumentoIdentidad",
+  "relationships": [
+    {
+      "otherEntityField": "nombres",
+      "otherEntityName": "persona",
+      "otherEntityRelationshipName": "documentos",
+      "relationshipName": "persona",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,56 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223827"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Trazabilidad de estados del pedido.\\nUn registro por cambio; la cronología sale de ordenar por createdDate.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPedido",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDIENTE_PAGO,PAGADO,EN_PREPARACION,ENVIADO,LISTO_RECOJO,ENTREGADO,RECHAZADO,ANULADO,CANCELADO,EXPIRADO"
+    },
+    {
+      "fieldName": "comentario",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "PedidoEstadoHistorial",
+  "relationships": [
+    {
+      "otherEntityField": "nroPedido",
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "historialEstados",
+      "relationshipName": "pedido",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

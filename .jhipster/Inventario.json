@@ -1,0 +1,71 @@
+{
+  "annotations": {
+    "changelogDate": "20231210223227"
+  },
+  "applications": ["commerceApp"],
+  "documentation": "Stock por producto y tienda. stock y stockMinimo los alimenta el\\nservicio de logística y stock vía API. Este servicio solo maneja\\nstockReservado (pedidos PENDIENTE_PAGO).",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "stock",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "stockReservado",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "stockMinimo",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Inventario",
+  "relationships": [
+    {
+      "otherEntityField": "sku",
+      "otherEntityName": "producto",
+      "otherEntityRelationshipName": "inventarios",
+      "relationshipName": "producto",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "tienda",
+      "otherEntityRelationshipName": "inventarios",
+      "relationshipName": "tienda",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
