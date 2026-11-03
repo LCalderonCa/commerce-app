@@ -9,6 +9,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.commerce.app.domain.enumeration.EstadoPago;
 import pe.commerce.app.domain.enumeration.MetodoPago;
 import pe.commerce.app.domain.enumeration.Moneda;
@@ -19,6 +24,7 @@ import pe.commerce.app.domain.enumeration.Moneda;
  * pasarela: código/nombre que devuelve la pasarela (Niubiz, Izipay, Mercado Pago...).
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "pago")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
@@ -70,16 +76,20 @@ public class Pago implements Serializable {
     private Instant fechaPago;
 
     @Size(max = 50)
-    @Column(name = "created_by", length = 50)
+    @CreatedBy
+    @Column(name = "created_by", length = 50, updatable = false)
     private String createdBy;
 
-    @Column(name = "created_date")
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
     private Instant createdDate;
 
     @Size(max = 50)
+    @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     private String lastModifiedBy;
 
+    @LastModifiedDate
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 

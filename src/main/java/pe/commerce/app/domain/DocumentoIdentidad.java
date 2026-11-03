@@ -9,6 +9,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.commerce.app.domain.enumeration.TipoDocumento;
 
 /**
@@ -17,6 +22,7 @@ import pe.commerce.app.domain.enumeration.TipoDocumento;
  * Unicidad (tipoDocumento, numero): agregar constraint en Liquibase.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "documento_identidad")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
@@ -53,16 +59,20 @@ public class DocumentoIdentidad implements Serializable {
     private Boolean vigente;
 
     @Size(max = 50)
-    @Column(name = "created_by", length = 50)
+    @CreatedBy
+    @Column(name = "created_by", length = 50, updatable = false)
     private String createdBy;
 
-    @Column(name = "created_date")
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
     private Instant createdDate;
 
     @Size(max = 50)
+    @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     private String lastModifiedBy;
 
+    @LastModifiedDate
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 
